@@ -1,10 +1,7 @@
 # jupyterlab-starchat-extension
 
-> **Warning**
-> This repo is not fully functional as of 6/6/23
-
 > **Note**
-> You will need a StarChat endpoint. See <mark>TODO</mark>
+> You will need a StarChat endpoint. See [starchat-service](https://github.com/aolney/starchat-service)
 
 A [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/) extension that implements the [StarChat](https://huggingface.co/spaces/HuggingFaceH4/starchat-playground) coding assistant. Uses [Fable](https://fable.io/) tooling.
 
