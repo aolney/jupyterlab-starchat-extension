@@ -1,6 +1,6 @@
 {
-  "name": "jupyterlab-starchat-extension",
-  "version": "0.1.0",
+  "name": "@aolney/jupyterlab-starchat-extension",
+  "version": "0.1.1",
   "description": "A JupyterLab extension that implements the StarChat coding assistant",
   "keywords": [
     "jupyter",
