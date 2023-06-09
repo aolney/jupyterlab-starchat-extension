@@ -11,37 +11,79 @@ open Import.Jupyter
 let inline (!!) x = createObj x
 let inline (=>) x y = x ==> y
 
+[<StringEnum>]
+type Message =
+    | UserMessage
+    | BotMessage
+    | ErrorMessage
+
 [<ImportMember("@jupyterlab/apputils")>]
 let ICommandPalette : obj = jsNative
+
+type [<AllowNullLiteral>] MarkdownIt =
+    abstract render: md: string * ?env: obj option -> string
+
+type [<AllowNullLiteral>] MarkdownItConstructor =
+    [<Emit "$0($1...)">] abstract Invoke: unit -> MarkdownIt
+    
+// type [<AllowNullLiteral>] MarkdownItConstructorStatic =
+//     [<Emit "new $0($1...)">] abstract Create: unit -> MarkdownItConstructor
+
+let [<Import("default", from="markdown-it")>] Exports: MarkdownItConstructor = jsNative
+
+let markdownIt = Exports.Invoke()
+
+// type IMarkdownIt =
+//     abstract render : text:string -> string
+
+// [<ImportAll("markdown-it")>]
+// let MarkdownIt: IMarkdownIt = jsNative
+
+// [<ImportAll("markdown-it")>]
+// let MarkdownIt: obj = jsNative
+
+// [<ImportMember("markdown-it/render")>]
+// let render( markdown : string) : string = jsNative
+
 
 //Some UI elements are declared outside the extension object so we can refer to them in functions
 //This is a lightweight alternative to using class syntax on the extension
 
 let history_div = Browser.Dom.document.createElement("div")
-history_div.setAttribute("style","width: 100%; max-width: 100%;height:440px;overflow: auto;")
+history_div.setAttribute("style","width: 100%; max-width: 100%;height:440px;overflow: auto;") 
 history_div.id <- "history_div"
 let user_input = Browser.Dom.document.createElement("textarea")
 user_input.setAttribute("style","width: 100%; max-width: 100%")
 user_input.id <- "user_input"
+let send_button : HTMLButtonElement = document.createElement ("button") :?> HTMLButtonElement
+send_button.setAttribute("style","width: 100%; max-width: 100%")
+send_button.id <- "send_button"
+send_button.innerText <- "Send"
 
-let appendResponseToHistory( response ) =
+let appendToHistory( response ) ( message_type : Message)=
     let newDiv = Browser.Dom.document.createElement("div")
     newDiv.innerHTML <- response
-    newDiv.setAttribute("style","color:LemonChiffon;") //"width: 100%; max-width: 100%;height:440px;overflow: auto;")
-    // newDiv.id <- "history_div"
+    match message_type with
+    | BotMessage -> newDiv.setAttribute("style","background-color:LemonChiffon;") //"width: 100%; max-width: 100%;height:440px;overflow: auto;")
+    | UserMessage -> newDiv.setAttribute("style","background-color:LightGrey;")
+    | ErrorMessage -> newDiv.setAttribute("style","background-color:Tomato;")
+
     history_div.appendChild(newDiv) |> ignore
 
-let appendErrorToHistory( ) =
-    let newDiv = Browser.Dom.document.createElement("div")
-    newDiv.innerHTML <- "An error occurred when contacting StarChat. See your browser console for more information."
-    newDiv.setAttribute("style","color:Tomato;") //"width: 100%; max-width: 100%;height:440px;overflow: auto;")
-    // newDiv.id <- "history_div"
-    history_div.appendChild(newDiv) |> ignore
+    //scroll into view
+    history_div.scrollTop <- history_div.scrollHeight;
 
 let sendUserInput() =
     // get  user message from textarea
-    let user_message = user_input.innerText
+    let user_message = user_input?value
 
+    //add user message to history
+    appendToHistory user_message UserMessage
+
+    //disable send button while we wait
+    send_button.disabled <- true
+    send_button.innerText <- "Wait"
+    
     // send to API, get bot response
     promise {
         let! coding_assistance_response = StarChatAPI.SendMessage user_message
@@ -50,13 +92,20 @@ let sendUserInput() =
             //log
             Logging.LogToServer( Logging.StarChatLogEntry060623.Create user_message ok.bot_response )
 
-            //update UI
-            appendResponseToHistory(ok.bot_response)
+            //format markdown
+            let html = markdownIt.render(ok.bot_response.Replace("<|end|>",""))
 
-        | Error( e ) ->
+            //update UI
+            appendToHistory html BotMessage
+            
+        | Error( e  ) ->
             //update UI with the error
-            appendErrorToHistory()
+            appendToHistory ("An error occurred when contacting StarChat. See your browser console for more information.") ErrorMessage
             console.log(e)
+
+        //enable button
+        send_button.disabled <- false
+        send_button.innerText <- "Send"
     }
     // ()
 
@@ -85,10 +134,6 @@ let extension =
             content.node.appendChild(user_input) |> ignore
 
             // Add send button to widget
-            let send_button = document.createElement ("button")
-            send_button.setAttribute("style","width: 100%; max-width: 100%")
-            send_button.id <- "send_button"
-            send_button.innerText <- "Send"
             send_button.addEventListener ("click", (fun _ -> sendUserInput() |> ignore ))
             content.node.appendChild(send_button) |> ignore
 

@@ -8,7 +8,15 @@
 
 A [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/) extension that implements the [StarChat](https://huggingface.co/spaces/HuggingFaceH4/starchat-playground) coding assistant. Uses [Fable](https://fable.io/) tooling.
 
-**NOTE: This plugin requires jupyterlab <= 1.2.6, so if you have a higher version (e.g. 2.X) you will need to execute `conda install jupyterlab=1.2.6` or similar for `pip`. The conda environment specification provided in `blockly-extensions.yml` will work as-is (e.g. `mamba env create -f blockly-extensions.yml`) or can be used as a template.**
+The following query string parameters enable functionality:
+
+- `endpoint=xxx` specifies a url for the StarChat endpoint (e.g. https://yourdomain.com/starchat) **the extension will not work properly without this**
+- `log=xxx` specifies a url for a logging endpoint (e.g. https://yourdomain.com/log)
+- `id=xxx` adds an identifier for logging
+
+The log data format is `{username: string, json: string}`.
+
+**NOTE: This plugin requires jupyterlab <= 1.2.6, so if you have a higher version (e.g. 2.X) you will need to execute `conda install jupyterlab=1.2.6` or similar for `pip`. The conda environment specification provided in `environment.yml` will work as-is (e.g. `mamba env create -f environment.yml`) or can be used as a template.**
 
 ## Installation
 

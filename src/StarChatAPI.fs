@@ -22,7 +22,7 @@ let SendMessage( input: string ) : JS.Promise<Result<CodingAssistanceResponse,Fe
     let endpoint = 
         match endpointOption with
         | Some( endpoint ) -> endpoint
-        | None -> "TODO TEST ENDPOINT"
+        | None -> "https://starchat.olney.ai/api/getBotResponse"
     promise {
         return! Fetch.tryPost( endpoint , { user_message = input }, caseStrategy = SnakeCase)
 }

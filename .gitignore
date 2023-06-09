@@ -6,3 +6,5 @@ node_modules/
 .ionide/
 .vscode/
 NuGet.Config
+**/src/obj/
+**/tests/obj/
