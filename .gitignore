@@ -8,3 +8,4 @@ node_modules/
 NuGet.Config
 **/src/obj/
 **/tests/obj/
+scratch.md
