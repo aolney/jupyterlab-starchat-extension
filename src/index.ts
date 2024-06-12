@@ -201,8 +201,8 @@ body {
 
 const MessageMap: { [id: string] : [string,string]; } = 
   {
-    "UserMessage": ["StarChat","left"],
-    "BotMessage": ["You","right"],
+    "UserMessage": ["You","right"], 
+    "BotMessage": ["StarChat","left"],
     "ErrorMessage": ["ERROR","left"]
   }
 
@@ -227,12 +227,19 @@ export function appendToHistory( text:string, message_type: string): void {
 }
 
 /**
+ * Enable user input button
+ */
+export function enableUserInput(send_button:HTMLButtonElement): void {
+    send_button.disabled = false
+    send_button.className = "msger-send-btn" 
+    send_button.innerText = "Send"
+}
+/**
  * Send user input to StarChat
  */
 export function sendUserInput(): void {
   // get user message from textarea
-  let user_message : string = document.getElementById("user_input_starchat")?.nodeValue ?? ""
-  // if( !user_message ) { user_message = ""; }
+  let user_message : string = (<HTMLTextAreaElement>document.getElementById("user_input_starchat"))?.value ?? ""
 
   //add user message to history
   appendToHistory(user_message,"UserMessage");
@@ -245,9 +252,7 @@ export function sendUserInput(): void {
   send_button.innerText = "Wait"
   
   // send to API, get bot response
-  // TODO rework according to https://stackoverflow.com/questions/62859190/handle-promise-catches-in-typescript
   StarChatAPI.SendMessage(user_message)
-    // .then( (response) => response.json())
     .then( (data) => 
       {
         let bot_response = data.bot_response;
@@ -259,6 +264,9 @@ export function sendUserInput(): void {
 
         //update UI
         appendToHistory(html,"BotMessage");
+
+        //enable input
+        enableUserInput(send_button);
       }).catch( (e) =>
         {
           //log
@@ -267,12 +275,11 @@ export function sendUserInput(): void {
           //update UI with the error
           appendToHistory("An error occurred when contacting StarChat. See your browser console for more information.", "ErrorMessage");
           console.log(e);
+
+          //enable input
+          enableUserInput(send_button);
         });
 
-      //enable button
-      send_button.disabled = false
-      send_button.className = "msger-send-btn" 
-      send_button.innerText = "Send"
 }
 
 /// Simplest way to connect javascript in injected HTML to our function: make a global function here
