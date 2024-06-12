@@ -1,0 +1,22 @@
+name: starchat-ext-jl4
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - copier=7
+  - git
+  - nodejs=18
+  - jinja2-time
+  - jupyterlab
+  - openssl
+  - pandas
+  - pip
+  - scikit-learn
+  - build
+  - twine
+  - hatch
+  - ca-certificates
+  - certifi
+

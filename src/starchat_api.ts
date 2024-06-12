@@ -17,7 +17,7 @@ export interface  CodingAssistanceResponse
 export function SendMessage(input: string) : Promise<CodingAssistanceResponse> {
     //autoset endpointOption for saturn
     if( !endpointOption && window.location.hostname == "saturn.olney.ai"){
-        endpointOption = "saturn.olney.ai";
+        endpointOption = "https://starchat.olney.ai/api/getBotResponse";
     } else if (!endpointOption ) {
         endpointOption = "UNDEFINED"
     }

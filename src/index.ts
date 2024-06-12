@@ -275,6 +275,10 @@ export function sendUserInput(): void {
       send_button.innerText = "Send"
 }
 
+/// Simplest way to connect javascript in injected HTML to our function: make a global function here
+const _global = (window /* browser */ || global /* node */) as any;
+_global.sendUserInput_StarChat = sendUserInput;
+
 
 /**
  * Function to create our widget
