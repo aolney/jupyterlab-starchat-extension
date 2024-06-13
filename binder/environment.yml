@@ -1,0 +1,24 @@
+# a mybinder.org-ready environment for demoing aolney_jupyterlab_starchat_extension
+# this environment may also be used locally on Linux/MacOS/Windows, e.g.
+#
+#   conda env update --file binder/environment.yml
+#   conda activate aolney-jupyterlab-starchat-extension-demo
+#
+name: aolney-jupyterlab-starchat-extension-demo
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.10.13
+  - jupyterlab >=4.0.0,<5
+  - nodejs=18
+  - copier=7
+  - jinja2-time
+  - ca-certificates
+  - certifi
+  - openssl
+  - pandas
+  - scikit-learn
+  - pip
+  - wheel

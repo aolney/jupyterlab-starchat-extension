@@ -1,0 +1,19 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v4.3.1
+_src_path: https://github.com/jupyterlab/extension-template
+author_email: aolney@memphis.edu
+author_name: Andrew Olney
+data_format: string
+file_extension: ''
+has_binder: true
+has_settings: false
+kind: frontend
+labextension_name: '@aolney/jupyterlab-starchat-extension'
+mimetype: ''
+mimetype_name: ''
+project_short_description: A JupyterLab extension providing an interface to StarChat.
+python_name: aolney_jupyterlab_starchat_extension
+repository: https://github.com/aolney/jupyterlab-starchat-extension
+test: true
+viewer_name: ''
+
