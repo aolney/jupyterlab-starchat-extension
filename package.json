@@ -1,6 +1,6 @@
 {
     "name": "@aolney/jupyterlab-starchat-extension",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "description": "A JupyterLab extension providing an interface to StarChat.",
     "keywords": [
         "jupyter",
